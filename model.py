@@ -358,19 +358,21 @@ class Article(db.Model):
 	@staticmethod
 	@memcached('get_article_by_url', ARTICLE_CACHE_TIME, lambda url: hash(url))
 	def get_article_by_url(url):
-		article = Article.all().filter('url =', url).get(config=EVENTUAL_CONSISTENCY_CONFIG)
-		if article:
-			memcache.set('get_article_by_id:%s' % article.key().id(), article, ARTICLE_CACHE_TIME)
-			return article
+		if len(url) <= 500:
+			article = Article.all().filter('url =', url).get(config=EVENTUAL_CONSISTENCY_CONFIG)
+			if article:
+				memcache.set('get_article_by_id:%s' % article.key().id(), article, ARTICLE_CACHE_TIME)
+				return article
 		return ENTITY_NOT_FOUND
 
 	@staticmethod
 	@memcached('get_article_by_id', ARTICLE_CACHE_TIME, lambda id: id)
 	def get_article_by_id(id):
-		article = Article.get_by_id(id)
-		if article:
-			memcache.set('get_article_by_url:%s' % hash(article.url), article, ARTICLE_CACHE_TIME)
-			return article
+		if id > 0:
+			article = Article.get_by_id(id)
+			if article:
+				memcache.set('get_article_by_url:%s' % hash(article.url), article, ARTICLE_CACHE_TIME)
+				return article
 		return ENTITY_NOT_FOUND
 
 	def category_name(self):
@@ -459,6 +461,8 @@ class Article(db.Model):
 	@staticmethod
 	@memcached('relative_articles', ARTICLES_CACHE_TIME, lambda id, limit: id)
 	def relative_articles(id, limit):
+		if id <= 0:
+			return []
 		article = Article.get_article_by_id(id)
 		if not article:
 			return []
@@ -498,6 +502,8 @@ class Article(db.Model):
 
 	@staticmethod
 	def calc_hits(article_id):
+		if article_id < 0:
+			return False
 		def calc(key):
 			try:
 				hits = memcache.get(key)
@@ -516,6 +522,8 @@ class Article(db.Model):
 
 	@staticmethod
 	def calc_rating(article_id):
+		if article_id < 0:
+			return None
 		article = Article.get_article_by_id(article_id)
 		if not article:
 			return None

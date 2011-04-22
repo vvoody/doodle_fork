@@ -78,7 +78,8 @@ class RelativeArticlesJson(UserHandler):
 class CommentPage(UserHandler):
 	#@yui.server_cache(COMMENTS_CACHE_TIME)
 	def get(self, id, cursor=None):
-		article =  Article.get_article_by_id(int(id))
+		article_id = int(id)
+		article = Article.get_article_by_id(article_id) if article_id else None
 		if article:
 			(comments, next_cursor), users = Comment.get_comments_with_user_by_article_key(
 				article.key(), cursor=unquoted_cursor(cursor))
@@ -164,7 +165,8 @@ class CommentPage(UserHandler):
 			elif browser in ('Opera Mini', 'Opera Mobile'):
 				ua.append('Opera')
 
-		article = Article.get_article_by_id(int(id))
+		id = int(id)
+		article = Article.get_article_by_id(id) if id else None
 		if article:
 			def post_comment(article_key, email, content, format, ua):
 				comment = Comment(parent=article_key, email=email, content=content, format=format, ua=ua)
@@ -217,7 +219,7 @@ class CommentPage(UserHandler):
 							title = u'Re: ' + article.title
 						else:
 							html_body = u'%s<hr/>您收到这封邮件是因为有人回复了您的评论。您可前往原文回复，请勿直接回复该邮件。<br/>若您不希望被打扰，可修改您的<a href="%s%sprofile/">账号设置</a>。' % (html_body, MAJOR_HOST_URL, BLOG_HOME_RELATIVE_PATH)
-						deferred.defer(send_reply_notification, html_content, html_body, title, int(id))
+						deferred.defer(send_reply_notification, html_content, html_body, title, id)
 				except:
 					logging.error(format_exc())
 			else:
@@ -254,8 +256,16 @@ class CommentJson(UserHandler):
 		self.set_cache(0)
 		self.set_content_type('json')
 
+		id = int(id)
+		if not id:
+			self.write(simplejson.dumps({
+				 'next_cursor': None,
+				 'comments': []
+			}))
+			return
+
 		(comments, next_cursor), users = Comment.get_comments_with_user_by_article_key(
-				db.Key.from_path('Article', int(id)), self.GET['order'] != 'desc', cursor=unquoted_cursor(cursor))
+				db.Key.from_path('Article', id), self.GET['order'] != 'desc', cursor=unquoted_cursor(cursor))
 		comments_list = []
 		for comment, user in izip(comments, users):
 			comments_list.append({
@@ -506,11 +516,12 @@ class RedirectToArticlePage(yui.RequestHandler):
 		else:
 			id = int(tid)
 
-		article = Article.get_article_by_id(id)
-		if article:
-			self.redirect(BLOG_HOME_RELATIVE_PATH + article.quoted_not_escaped_url(), 301)
-		else:
-			self.redirect(BLOG_HOME_RELATIVE_PATH, 301)
+		if id:
+			article = Article.get_article_by_id(id)
+			if article:
+				self.redirect(BLOG_HOME_RELATIVE_PATH + article.quoted_not_escaped_url(), 301)
+				return
+		self.redirect(BLOG_HOME_RELATIVE_PATH, 301)
 
 
 class RedirectToHomeOrArticlePage(yui.RequestHandler):
@@ -520,10 +531,12 @@ class RedirectToHomeOrArticlePage(yui.RequestHandler):
 	def get(self):
 		match = RedirectToHomeOrArticlePage._PATTERN.match(self.request.query_string)
 		if match:
-			article = Article.get_article_by_id(int(match.group(1)))
-			if article:
-				self.redirect(BLOG_HOME_RELATIVE_PATH + article.quoted_not_escaped_url(), 301)
-				return
+			id = int(match.group(1))
+			if id:
+				article = Article.get_article_by_id(id)
+				if article:
+					self.redirect(BLOG_HOME_RELATIVE_PATH + article.quoted_not_escaped_url(), 301)
+					return
 		self.redirect('/', 301)
 
 
@@ -630,7 +643,8 @@ class WapArticlePage(UserHandler):
 class WapCommentPage(UserHandler):
 	#@yui.server_cache(COMMENTS_CACHE_TIME)
 	def get(self, id, cursor=None):
-		article =  Article.get_article_by_id(int(id))
+		article_id = int(id)
+		article = Article.get_article_by_id(article_id) if article_id else None
 		if article:
 			(comments, next_cursor), users = Comment.get_comments_with_user_by_article_key(
 				article.key(), cursor=unquoted_cursor(cursor))
