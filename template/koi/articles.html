@@ -1,0 +1,12 @@
+<?py
+for article in articles:
+	dt = convert_to_local_time(article.time)
+	tags = ', '.join(article.tags) if article.tags else '无'
+?>
+	<article class="post">
+		<h2 class="post-title"><a href="#{{BLOG_HOME_RELATIVE_PATH}}#{article.quoted_url()}" title="${article.title}">${article.title}</a></h2>
+		<p class="post-date"><span class="year">#{dt.year}</span> <span class="month">#{dt.month}</span> <span class="day">#{dt.day}</span> <span class="time">#{dt.strftime('%I:%M %p')}</span> <span class="postcomment">#{article.replies}条评论</span> <span>#{article.hits}次查看</span> <span>#{article.like}顶</span> <span>#{article.hate}踩</span></p>
+		<p class="post-data"><span class="postcategory">分类：#{article.category_name() or '无'}</span> <span class="posttag">标签：${tags}</span></p>
+		<section class="article-content">#{article.html_summary()} <a href="#{{BLOG_HOME_RELATIVE_PATH}}#{article.quoted_url()}" class="more-link" title="阅读全文">More</a></section>
+	</article>
+<?py #endfor ?>

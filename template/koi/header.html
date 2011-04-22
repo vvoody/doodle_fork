@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="#{{LANGUAGE}}">
+<head>
+	<title>${title}</title>
+<script>
+<?PY if GOOGLE_ANALYTICS_ID: ?>
+var _gaq = [['_setAccount', '#{{GOOGLE_ANALYTICS_ID}}'], ['_trackPageview']];
+var _gaq_start = new Date();
+<?PY else: ?>
+var _gaq = [];
+<?PY #endif ?>
+</script>
+	<link href="#{{BLOG_HOME_RELATIVE_PATH}}feed" rel="alternate" title="${{BLOG_TITLE}} - ATOM供稿" type="application/atom+xml"/>
+	<link href="#{{BLOG_HOME_RELATIVE_PATH}}comment-feed" rel="alternate" title="${{BLOG_TITLE}} - 评论供稿" type="application/atom+xml"/>
+	<link rel="stylesheet" href="/theme/koi/css/style.css"/>
+<?py
+if page == 'article':
+	if request.is_spider:
+?>
+	<meta name="description" content="${strip_html(article.html_summary(), 200)}"/>
+	<link rel="canonical" href="#{{BLOG_HOME_RELATIVE_PATH}}#{article.quoted_url()}"/>
+<?py 	#endif ?>
+	<link rel="stylesheet" href="/css/sunburst.css"/>
+	<link rel="stylesheet" href="/markitup/skins/simple/style.css"/>
+	<link rel="stylesheet" href="/markitup/sets/bbcode/style.css"/>
+<?py elif page == 'comments': ?>
+	<meta name="robots" content="nofollow"/>
+<?py #endif ?>
+</head>
+<body>
+<div id="wrapper">
+<header id="header">
+	<h1 id="logo"><a href="#{{BLOG_HOME_RELATIVE_PATH}}">${{BLOG_TITLE}}</a></h1>
+	<p class="description">${{BLOG_SUB_TITLE}}</p>
+<?PY from model import get_subscribers ?>
+	<a class="feed" title="订阅一下又不会怀孕的说" href="#{{BLOG_HOME_RELATIVE_PATH}}feed"></a>
+	<p class="subscribe">已经有#{{get_subscribers()}}人订阅了，你敢订阅么？→</p>
+	<p class="socialmedia">
+<?PY
+for social_media in SOCIAL_MEDIAS:
+	rel = social_media.get('rel', '')
+	if rel:
+?>
+		<a href="#{{social_media['url']}}" title="${{social_media['title']}}" rel="#{{rel}}"><img src="/theme/koi/img/socialmedia/#{{social_media['icon']}}.png" alt="${{social_media['title']}}" height="24" width="24"/>${{social_media['text']}}</a>
+<?PY 	else: ?>
+		<a href="#{{social_media['url']}}" title="${{social_media['title']}}"><img src="/theme/koi/img/socialmedia/#{{social_media['icon']}}.png" alt="${{social_media['title']}}" height="24" width="24"/>${{social_media['text']}}</a>
+<?PY
+ 	#endif
+#endfor
+?>
+	</p>
+	<nav>
+		<ul id="nav">
+<?PY
+from tenjin.html import tagattr
+
+next_levels = [nav_link['level'] for nav_link in NAV_LINKS[1:]] + [1]
+for nav_link, next_level in izip(NAV_LINKS, next_levels):
+	current_level = nav_link['level']
+	if current_level == next_level:
+		rel = nav_link.get('rel', '')
+?>
+			<li><a href="#{{nav_link['url']}}"#{{tagattr('rel', rel, rel)}}>${{nav_link['text']}}</a></li>
+<?PY 	elif current_level < next_level: ?>
+			<li><a href="#{{nav_link['url']}}"#{{tagattr('rel', rel, rel)}}>${{nav_link['text']}}</a><ul>
+<?PY 	else: ?>
+			<li><a href="#{{nav_link['url']}}"#{{tagattr('rel', rel, rel)}}>${{nav_link['text']}}</a></li>#{{'</ul></li>' * (current_level - next_level)}}
+<?PY
+	#endif
+#endfor
+?>
+			<li><a href="/login">登录|登出</a></li>
+<?py if request.is_admin: ?>
+			<li><a href="#{{BLOG_ADMIN_RELATIVE_PATH}}">管理博客</a></li>
+			<li><a href="/_ah/admin/">开发控制台</a></li>
+<?py #endif ?>
+		</ul>
+	</nav>
+	<form method="get" id="searchform" action="#{{BLOG_HOME_RELATIVE_PATH}}search">
+		<input class="light" type="text" placeholder="找找有啥好东东…" value="${keywords if 'keywords' in _context else ''}" name="keywords" id="keywords"/>
+		<input type="submit" value="搜索" id="searchsubmit"/>
+	</form>
+</header>

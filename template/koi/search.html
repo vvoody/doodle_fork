@@ -1,0 +1,36 @@
+<?py
+not_ajax = not request.is_xhr
+if not_ajax:
+	include('header.html')
+#endif
+?>
+<section id="content">
+<?py
+if articles:
+	include('articles.html')
+	if next_cursor:
+?>
+	<p class="post-nav"><span class="previous"><a href="#{{BLOG_HOME_RELATIVE_PATH}}category/${next_cursor}"><em>向前翻页</em> 貌似没有找到我想要的</a></span></p>
+<?py
+	#endif
+elif not_ajax:
+	if cursor:
+?>
+	<h2>囧，已经到最后一页了…</h2>
+	<p>去看看其他的页面吧。</p>
+<?py 	else: ?>
+	<h2>囧，没有找到相关的文章…</h2>
+	<p>试试更改搜索条件吧。</p>
+<?py
+	#endif
+#endif
+?>
+</section>
+<?py
+if not_ajax:
+	if GOOGLE_CSE_ID:
+		include('google_search.html')
+	#endif
+	include('footer.html')
+#endif
+?>

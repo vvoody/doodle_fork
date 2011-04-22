@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?PY base_url = MAJOR_HOST_URL + BLOG_HOME_RELATIVE_PATH ?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+	xml:lang="#{{LANGUAGE}}"
+	xml:base="#{{base_url}}">
+	<title>${{BLOG_TITLE}}</title>
+	<id>#{{BLOG_FEED_URL}}</id>
+	<subtitle>${{BLOG_DESCRIPTION}}</subtitle>
+	<link href="#{{base_url}}" rel="alternate" type="text/html"/>
+	<link href="#{{BLOG_FEED_URL}}" rel="self"/>
+<?PY for hub in HUBS: ?>
+	<link rel="hub" href="#{{hub}}"/>
+<?PY #endfor ?>
+	<updated>#{last_updated}</updated>
+	<author>
+		<name>${{BLOG_AUTHOR}}</name>
+	</author>
+<?py for article in articles: ?>
+	<entry>
+		<link href="#{article.quoted_url()}"/>
+		<id>#{{base_url}}article/#{article.key().id()}</id>
+		<title>${article.title}</title>
+		<content type="html">${article.html_content() if OUTPUT_FULLTEXT_FOR_FEED else article.summary}</content>
+		<author>
+			<name>${{BLOG_AUTHOR}}</name>
+		</author>
+		<updated>#{iso_time_format(article.mod_time)}</updated>
+	</entry>
+<?py #endfor ?>
+</feed>

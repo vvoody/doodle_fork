@@ -1,0 +1,44 @@
+<?py include('admin_header.html') ?>
+<div class="info"></div>
+<div id="container">
+	<h3>清空缓存</h3>
+	<div class="grid">
+		<input type="button" value="清空" id="flush-cache"/> 清空memcache和server cache，这会降低响应速度，最好仅在出错或部署新版本时使用。
+	</div>
+
+	<h3>生成站点地图</h3>
+	<div class="grid">
+		<input type="button" value="生成" id="generate—sitemap"/> 手动生成站点地图。这项操作可能非常耗时，由于每天会自动生成一次，因此一般只在导入大量文章后使用。
+	</div>
+
+	<h3>生成分类</h3>
+	<div class="grid">
+		<input type="button" value="生成" id="generate-categories"/> 查询所有文章中有，而尚未创建的分类，并自动生成它们（生成的分类路径为1级）。一般只在导入大量文章后使用。
+	</div>
+
+	<h3>生成标签</h3>
+	<div class="grid">
+		<input type="button" value="生成" id="generate-tags"/> 查询所有文章有，而尚未创建的标签，并自动生成它们。一般只在导入大量文章后使用。
+	</div>
+
+	<h3>生成历史供稿</h3>
+	<div class="grid">
+		<input type="button" value="生成" id="generate-feed"/> 当更换域名时，可以用它生成历史feed，并通知Google Reader抓取。需要更改blog.py中的设置，取消注释view.GeneratedFeedPage那行。
+	</div>
+
+	<h3>更新标签计数</h3>
+	<div class="grid">
+		<input type="button" value="更新" id="update—tags—count"/> 当标签计数不正确时，可以用它来更新。
+	</div>
+
+	<h3>更新文章评论数</h3>
+	<div class="grid">
+		<input type="button" value="更新" id="update-articles-replies"/> 当文章评论数不正确时，可以用它来更新。
+	</div>
+
+	<h3>更新订阅数</h3>
+	<div class="grid">
+		<input type="button" value="更新" id="remove-old-subscribers"/> 当订阅数不正确时，可以用它来更新。（每天也会自动更新。）
+	</div>
+</div>
+<?py include('admin_footer.html') ?>

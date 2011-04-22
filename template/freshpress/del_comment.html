@@ -1,0 +1,15 @@
+<?py
+include('admin_header.html')
+if 'info' in _context:
+?>
+	<div class="info"></div>
+<?py #endif ?>
+	<form method="post" action="">
+		<div><input type="submit" value="删除"/></div>
+	</form>
+	<div class="notice">注意：
+		<ul>
+			<li>删除评论后将无法恢复。</li>
+		</ul>
+	</div>
+<?py include('admin_footer.html') ?>

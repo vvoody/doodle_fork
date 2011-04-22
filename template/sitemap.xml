@@ -1,0 +1,4 @@
+<?PY from tenjin.helpers import _decode_params ?>
+<?py for article in articles: ?>
+<url><loc>#{{MAJOR_HOST_URL}}#{{BLOG_HOME_RELATIVE_PATH}}#{article.quoted_url()}</loc><lastmod>#{sitemap_time_format(article.mod_time)}</lastmod></url>
+<?py #endfor ?>

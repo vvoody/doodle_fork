@@ -1,0 +1,38 @@
+<?py
+include('admin_header.html')
+if msg:
+?>
+	<div class="msg">${msg}</div>
+<?py
+#endif
+if not use_pw:
+?>
+	<form method="get" action="">
+		<div><label for="feed">Google日历feed</label> <div class="input-field"><input type="text" id="feed" name="feed" value="#{token.feed if token else 'http://www.google.com/calendar/feeds/default/private/full'}"/></div></div>
+<?py 	if token: ?>
+		<div><input type="submit" value="获取Token"/> <input type="button" value="删除Token" id="del-token"/></div>
+<?py 	else: ?>
+		<div><input type="submit" value="获取Token"/></div>
+<?py 	#endif ?>
+	</form>
+<?py #endif ?>
+	<div class="notice">说明：
+		<ul>
+			<li>短信提醒功能需要配合<a href="https://www.google.com/calendar/">Google日历</a>使用，注意登录Google日历的账号必须与setting.py中的ADMIN_EMAIL相同。</li>
+			<li>使用时需要在Google日历的“日历设置”-“移动设置”中验证自己的手机。</li>
+<?py if use_pw: ?>
+			<li>使用账号密码登录是不推荐的方式，你可以在setting.py中将ADMIN_PASSWORD设为''，以启用AuthSub方式登录。（这种方式的设置会比较麻烦。）</li>
+<?py else: ?>
+			<li>如果要使用自己的域名（非appspot.com域名），需要在Google的<a href="https://www.google.com/accounts/ManageDomains">Manage Your Domains</a>页面进行注册。详细方法可见<a href="http://code.google.com/apis/accounts/docs/RegistrationForWebAppsAuto.html">Registration for Web-Based Applications</a>。</li>
+<?py #endif ?>
+			<li>提醒时使用的是默认日历，你可以用如下方法使用其他日历：
+				<ol>
+					<li>创建或选择一个日历，在这个日历的设置中找到“私人网址”，它的XML图标对应的网址应该类似于：<br/>
+					http://www.google.com/calendar/feeds/.....%40group.calendar.google.com/<span style="color:red">private-...../basic</span></li>
+					<li>把“private-...../basic”改成“private/full”后就是feed地址，即：<br/>
+					http://www.google.com/calendar/feeds/.....%40group.calendar.google.com/<span style="color:red">private/full</span></li>
+				</ol>
+			</li>
+		</ul>
+	</div>
+<?py include('admin_footer.html') ?>

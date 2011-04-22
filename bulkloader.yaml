@@ -1,0 +1,132 @@
+python_preamble:
+- import: google.appengine.ext.bulkload.transform
+- import: google.appengine.ext.db
+- import: my_transform
+- import: model
+
+transformers:
+
+- model: my_transform.Article
+  connector: simplexml
+  connector_options:
+    xpath_to_nodes: /doodle/Article
+    style: element_centric
+  property_map:
+
+    - property: __key__
+      external_name: key
+
+    - property: title
+      external_name: title
+
+    - property: url
+      external_name: url
+
+    - property: content
+      external_name: content
+      import_transform: db.Text
+
+    - property: format
+      external_name: format
+      import_transform: int
+
+    - property: published
+      external_name: published
+      import_transform: "lambda x: bool(int(x))"
+      export_transform: "lambda x: str(int(x))"
+
+    - property: time
+      external_name: dateline
+      import_transform: transform.import_date_time('%Y-%m-%d %H:%M:%S')
+      export_transform: transform.export_date_time('%Y-%m-%d %H:%M:%S')
+
+    - property: mod_time
+      external_name: dateline
+      import_transform: transform.import_date_time('%Y-%m-%d %H:%M:%S')
+      export_transform: transform.export_date_time('%Y-%m-%d %H:%M:%S')
+
+    - property: keywords
+      external_name: keywords
+      import_transform: my_transform.to_list
+      export_transform: my_transform.join_list
+
+    - property: tags
+      external_name: tags
+      import_transform: my_transform.to_list
+      export_transform: my_transform.join_list
+
+    - property: category
+      external_name: category
+
+    - property: hits
+      external_name: hits
+      import_transform: int
+
+    - property: replies
+      external_name: replies
+      import_transform: int
+
+    - property: like
+      external_name: like
+      import_transform: int
+
+    - property: hate
+      external_name: hate
+      import_transform: int
+
+    - property: rating
+      external_name: rating
+      import_transform: int
+
+
+- model: my_transform.Comment
+  connector: simplexml
+  connector_options:
+    xpath_to_nodes: /doodle/Comment
+    style: element_centric
+  property_map:
+
+    - property: __key__
+      external_name: key
+
+    - property: email
+      external_name: email
+
+    - property: content
+      external_name: content
+      import_transform: db.Text
+
+    - property: format
+      external_name: format
+      import_transform: int
+
+    - property: ua
+      external_name: ua
+      import_transform: my_transform.to_list
+      export_transform: my_transform.join_list
+
+    - property: time
+      external_name: dateline
+      import_transform: transform.import_date_time('%Y-%m-%d %H:%M:%S')
+      export_transform: transform.export_date_time('%Y-%m-%d %H:%M:%S')
+
+
+- model: my_transform.User
+  connector: simplexml
+  connector_options:
+    xpath_to_nodes: /doodle/User
+    style: element_centric
+  property_map:
+
+    - property: __key__
+      external_name: key
+
+    - property: name
+      external_name: name
+
+    - property: site
+      external_name: site
+
+    - property: flag
+      external_name: flag
+      import_transform: int

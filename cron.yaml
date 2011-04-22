@@ -1,0 +1,12 @@
+cron:
+- description: generate sitemap
+  url: /admin/generate_sitemap
+  schedule: every 24 hours
+
+- description: remove old subscribers
+  url: /admin/remove_old_subscribers
+  schedule: every 12 hours
+
+- description: warmup
+  url: /_ah/warmup
+  schedule: every 10 minutes

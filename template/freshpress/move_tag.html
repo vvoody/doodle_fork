@@ -1,0 +1,42 @@
+<?py include('admin_header.html') ?>
+	<nav id="nav2">
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}tag/new/">创建标签</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}tag/delete/">删除标签</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}tag/move/" class="current">移动标签</a>
+	</nav>
+	<div class="info"></div>
+	<form method="post" action="">
+		<div><label for="from_name">源标签名</label>
+			<div class="input-field">
+			<select id="from_name" name="from_name">
+<?py
+for tag in tags:
+	tag = tag.key().name()
+?>
+				<option value="${tag}">${tag}</option>
+<?py #endfor ?>
+			</select>
+			</div>
+		</div>
+		<div><label for="to_name">目标标签名</label>
+			<div class="input-field">
+			<select id="to_name" name="to_name">
+<?py
+for tag in tags:
+	tag = tag.key().name()
+?>
+				<option value="${tag}">${tag}</option>
+<?py #endfor ?>
+			</select>
+			</div>
+		</div>
+		<div><input type="submit" value="移动"/></div>
+	</form>
+	<div class="notice">注意：
+		<ul>
+			<li>目标标签必须存在。</li>
+			<li>这个操作可能很耗时间，因此在收到完成任务的提示邮件前，请不要改动这2个标签及其下的文章。</li>
+			<li>若长时间未收到提示邮件，可登录<a href="https://appengine.google.com">管理界面</a>，查看Task Queues的执行状态，有必要时可删除该任务。</li>
+		</ul>
+	</div>
+<?py include('admin_footer.html') ?>

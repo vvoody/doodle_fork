@@ -1,0 +1,22 @@
+<?py
+from tenjin.html import checked
+include('admin_header.html')
+?>
+	<nav id="nav2">
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}user/search/">搜索用户</a>
+		<a href="javascript:void(0)" class="current">修改用户</a>
+	</nav>
+	<div class="info"></div>
+	<form method="post" action="#{{BLOG_ADMIN_RELATIVE_PATH}}user/edit/">
+		<div><label for="name">#{user.key().name()}的用户名（必填）</label> <div class="input-field"><input type="text" id="name" name="name" value="${user.name}"/></div></div>
+		<div><label for="site">网站</label> <div class="input-field"><input type="text" id="site" name="site" value="${user.site}"/></div></div>
+		<div><label>状态</label> <div class="input-field">
+		<label for="mute">不接收评论通知</label> <input type="checkbox" id="mute" name="mute"#{checked(user.flag & 4)}/><br/>
+		<label for="verified">已审核</label> <input type="checkbox" id="verified" name="verified"#{checked(user.flag & 2)}/><br/>
+		<label for="banned">禁止发言</label> <input type="checkbox" id="banned" name="banned"#{checked(not(user.flag & 1))}/><br/>
+		<label for="del-comment">删除该用户的所有评论（不可恢复）</label> <input type="checkbox" id="del-comment" name="del-comment"/>
+		</div></div>
+		<input type="hidden" id="email" name="email" value="#{user.key().name()}"/>
+		<div><input type="submit" value="保存"/></div>
+	</form>
+<?py include('admin_footer.html') ?>

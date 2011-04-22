@@ -1,0 +1,25 @@
+<?py
+from tenjin.html import checked
+include('header.html')
+user = request.current_user
+?>
+<section id="content">
+	<form action="" method="post" id="profileform">
+		<p>账号邮箱：#{user.key().name()}</p>
+		<p>头像（可在<a href="http://www.gravatar.com/">gravatar</a>设置）：<img src="#{user.get_gravatar()}?s=24&amp;d=monsterid" alt=""/></p>
+		<p>
+			<label for="name">用户名<small>（必填）</small></label><br/>
+			<input type="text" name="name" id="name" value="${user.name}" size="50" maxlength="15" tabindex="1"/>
+		</p>
+		<p>
+			<label for="site">您的网站<small>（选填）</small></label><br/>
+			<input type="text" name="site" id="site" value="${user.site}" size="50" maxlength="100" tabindex="2"/>
+		</p>
+		<p>
+			<label for="mute">您的评论被回复时，是否接收邮件通知</label><br/>
+			<input type="checkbox" id="mute" name="mute"#{checked(user.flag & 4)} tabindex="3"/> 我不想被打扰
+		</p>
+		<p><input name="submit" type="submit" id="submit" tabindex="3" value="我填完了"/></p>
+	</form>
+</section>
+<?py include('footer.html') ?>

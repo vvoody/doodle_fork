@@ -1,0 +1,28 @@
+<?py
+from tenjin.html import checked
+include('admin_header.html')
+?>
+	<div class="info"></div>
+	<form method="post" action="">
+		<div><label for="email">评论者Email地址（请不要随意改动）</label> <div class="input-field"><input type="text" id="email" name="email" value="${comment.email}"/></div></div>
+		<div><label for="content">内容</label>
+			<div class="input-field">
+			<ul class="switcher">
+				<li class="bbcode"><a href="#">BBCode</a></li>
+				<li class="html"><a href="#">HTML</a></li>
+				<li class="remove"><a href="#">纯文本</a></li>
+			</ul>
+			<textarea id="content" name="content" rows="8" cols="120">${comment.content}</textarea>
+			</div>
+		</div>
+		<div><label>格式</label>
+			<div class="input-field">
+				<input type="checkbox" id="bbcode" name="bbcode"#{checked(comment.format & 1)}/><label for="bbcode">BBCode</label>
+				<input type="checkbox" id="html" name="html"#{checked(comment.format & 2)}/><label for="html">HTML</label>
+			</div>
+		</div>
+		<div><label for="time">评论发表时间（格式为“YYYY-MM-DD HH:MM:SS”，留空则使用当前时间）</label> <div class="input-field"><input type="text" id="time" name="time" value="#{formatted_time_for_edit(comment.time)}"/></div></div>
+		<div><label for="ua">用户代理信息（以“,”分隔）</label> <div class="input-field"><input type="text" id="ua" name="ua" value="#{', '.join(comment.ua)}"/></div></div>
+		<div><input type="submit" value="保存"/></div>
+	</form>
+<?py include('admin_footer.html') ?>

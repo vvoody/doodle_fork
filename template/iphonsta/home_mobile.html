@@ -1,0 +1,24 @@
+<?py include('header_mobile.html') ?>
+<div id="cnt">
+<?py
+if articles:
+	for article in articles:
+?>
+<h2><a class="art" href="#{{BLOG_WAP_RELATIVE_PATH}}#{article.quoted_url()}">${article.title}<br/>
+<span class="info">#{article.replies}条评论 #{article.hits}次查看 ${formatted_time(article.time)}</span></a></h2>
+<?py 	#endfor
+	if next_cursor:
+?>
+	<p class="wp-pagenavi"><a href="#{{BLOG_WAP_RELATIVE_PATH}}?cursor=#{quoted_string(next_cursor)}" class="nextpage">翻页</a></p>
+<?py
+	#endif
+elif cursor:
+?>
+	<h2>囧，已经到最后一页了…</h2>
+	<p>去看看其他的页面吧。</p>
+<?py else: ?>
+	<h2>囧，这家伙太懒了，啥也没写…</h2>
+	<p>下次再来看看吧。</p>
+<?py #endif ?>
+</div>
+<?py include('footer_mobile.html') ?>

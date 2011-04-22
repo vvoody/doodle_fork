@@ -1,0 +1,59 @@
+<?py
+include('header_mobile.html')
+
+article_id = article.key().id()
+dt = convert_to_local_time(article.time)
+tags = article.tags
+tags = ', '.join(tags) if tags else '无'
+?>
+<div id="cnt">
+	<div class="art">
+		<p class="postmetadata">${formatted_time(article.time)}，分类：#{article.category_name() or '无'}，标签：${tags}
+<?py if request.is_admin: ?>
+			<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}article/edit/#{article_id}">[编辑]</a> <a href="#{{BLOG_ADMIN_RELATIVE_PATH}}article/delete/#{article_id}">[删除]</a>
+<?py #endif ?>
+		</p>
+		<div class="entry">
+<?py for _ in cache_as('article:%s' % article_id, ARTICLE_CACHE_TIME): ?>
+				#{article.html_content()}
+<?py #endfor ?>
+		</div>
+	</div>
+	<div id="commentlist">
+		<ol class="commentlist"></ol>
+	</div>
+	<div class="comments">
+		<div id="cmnts">
+<?py if article.replies: ?>
+			<p class="wp-pagenavi"><a href="#{{BLOG_WAP_RELATIVE_PATH}}comment/#{article_id}/" class="nextpage">查看#{article.replies}条评论</a></p>
+<?py else: ?>
+			没有评论
+<?py #endif ?>
+		</div>
+	</div>
+	<div id="respond">
+		<div id="uit">
+<?py
+user = request.current_user
+if user:
+?>
+			<form action="#{{BLOG_HOME_RELATIVE_PATH}}comment/#{article_id}/?viewmode=mobile" method="post" id="commentform">
+				<p>您当前登录的用户为：${user.name}，您可<a href="/logout">登出</a>以更换用户，或<a href="#{{BLOG_HOME_RELATIVE_PATH}}profile/">修改用户资料</a>。</p>
+				<p><textarea name="comment" id="comment" cols="100%" rows="10" tabindex="1"></textarea></p>
+				<p><label for="bbcode" onclick="">启用BBCode</label> <input name="bbcode" type="checkbox" id="bbcode" tabindex="2"/></p>
+				<div class="submit"><div class="outbl sbm"><input name="submit" type="submit" id="submit" tabindex="3" value="来一发"/></div></div>
+			</form>
+<?py else: ?>
+			<p>您需要<a href="/login">登录</a>您的Google账号才能进行评论。</p>
+<?py #endif ?>
+		</div>
+	</div>
+</div>
+<script>
+var article_id = '#{article_id}';
+var home_path = '#{{BLOG_HOME_RELATIVE_PATH}}';
+<?py if request.is_admin: ?>
+var comment_delete_url = '#{{BLOG_ADMIN_RELATIVE_PATH}}comment/delete/#{article_id}/';
+<?py #endif ?>
+</script>
+<?py include('footer_mobile.html') ?>

@@ -1,0 +1,10 @@
+queue:
+
+- name: default
+  rate: 5/s
+
+- name: counter
+  rate: 10/m
+
+- name: generate-sitemap
+  rate: 1/s

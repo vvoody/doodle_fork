@@ -1,0 +1,17 @@
+<?py include('admin_header.html') ?>
+	<nav id="nav2">
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}article/new/">撰写新文章</a>
+		<a href="javascript:void(0)" class="current">删除文章</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}article/unpublished/" target="_blank">未发布的文章</a>
+	</nav>
+	<div class="info"></div>
+	<form method="post" action="">
+		<div><input type="submit" value="删除"/></div>
+	</form>
+	<div class="notice">注意：
+		<ul>
+			<li>删除文章会连带删除该文章的所有评论和评分。</li>
+			<li>如果只是暂时不想让其他人看到，可以在<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}article/edit/#{id}">编辑页面</a>选择不发布。</li>
+		</ul>
+	</div>
+<?py include('admin_footer.html') ?>

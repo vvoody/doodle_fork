@@ -1,0 +1,37 @@
+<?py include('admin_header.html') ?>
+	<nav id="nav2">
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}category/new/">创建分类</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}category/delete/">删除分类</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}category/move/" class="current">移动分类</a>
+	</nav>
+	<div class="info"></div>
+	<form method="post" action="">
+		<div><label for="from_path">源分类路径（以${{CATEGORY_PATH_DELIMETER}}为分隔符）</label>
+			<div class="input-field">
+			<select id="from_path" name="from_path">
+<?py for category in categories: ?>
+				<option value="${category.path}">${category.path}</option>
+<?py #endfor ?>
+			</select>
+			</div>
+		</div>
+		<div><label for="to_path">目标分类路径（以${{CATEGORY_PATH_DELIMETER}}为分隔符）</label>
+			<div class="input-field">
+			<select id="to_path" name="to_path">
+<?py for category in categories: ?>
+				<option value="${category.path}">${category.path}</option>
+<?py #endfor ?>
+			</select>
+			</div>
+		</div>
+		<div><input type="submit" value="移动"/></div>
+	</form>
+	<div class="notice">注意：
+		<ul>
+			<li>若源分类包含子分类，子分类的文章不会移动到目标分类。</li>
+			<li>目标分类必须存在。</li>
+			<li>这个操作可能很耗时间，因此在收到完成任务的提示邮件前，请不要改动这2个分类及其下的文章。</li>
+			<li>若长时间未收到提示邮件，可登录<a href="https://appengine.google.com">管理界面</a>，查看Task Queues的执行状态，有必要时可删除该任务。</li>
+		</ul>
+	</div>
+<?py include('admin_footer.html') ?>

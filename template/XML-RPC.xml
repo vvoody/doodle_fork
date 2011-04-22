@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<methodCall>
+	<methodName>weblogUpdates.extendedPing</methodName>
+	<params>
+		<param><value>${{BLOG_TITLE}}</value></param>
+		<param><value>#{{MAJOR_HOST_URL}}#{{BLOG_HOME_RELATIVE_PATH}}</value></param>
+		<param><value>#{article_url}</value></param>
+		<param><value>#{{BLOG_FEED_URL}}</value></param>
+	</params>
+</methodCall>

@@ -1,0 +1,33 @@
+<?py include('admin_header.html') ?>
+	<nav id="nav2">
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}twitter/status" class="current">Twitter状态</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}twitter/oauth">关联Twitter</a>
+	</nav>
+<?PY if TWITTER_CONSUMER_KEY and TWITTER_CONSUMER_SECRET: ?>
+<?py if twitter: ?>
+	<div class="info"></div>
+	<form method="post" action="">
+		<div><textarea id="content" name="content" rows="4" cols="120" placeholder="有什么想发布到Twitter的？"></textarea></div>
+		<div><input type="submit" value="发布到Twitter"/></div>
+	</form>
+<?py #endif ?>
+<?PY #endif ?>
+	<div class="notice">说明：
+		<ul>
+			<li>该功能使您在发表文章时，可以分享发布到Twitter。</li>
+<?PY if TWITTER_CONSUMER_KEY and TWITTER_CONSUMER_SECRET: ?>
+<?py if twitter: ?>
+			<li>您的博客已与Twitter账号<a href="https://twitter.com/#{twitter.name}">@#{twitter.name}</a>关联。</li>
+			<li>您可随时在<a href="https://twitter.com/settings/connections">Twitter Connections</a>中取消与本博客的关联。</li>
+			<li>若需要恢复关联，可以点这里重新进行<a href="oauth">关联</a>。</li>
+<?py else: ?>
+			<li>您的博客尚未关联Twitter账号，您需要点此链接进行<a href="oauth">关联</a>（可能需要翻墙）。</li>
+<?py #endif ?>
+<?PY else: ?>
+			<li>您尚未设置Twitter应用的密钥，如需启用该功能，需要<a href="http://dev.twitter.com/apps/new">去Twitter注册一个应用</a>（可能需要翻墙）。</li>
+			<li>注册时请将Application Type设为“Browser”，Callback URL设为“#{{TWITTER_CALLBACK_URL}}”，Default Access type设为“Read & Write”，其余随意填写。</li>
+			<li>拿到密钥后，请在setting.py里设置TWITTER_CONSUMER_KEY和TWITTER_CONSUMER_SECRET。</li>
+<?PY #endif ?>
+		</ul>
+	</div>
+<?py include('admin_footer.html') ?>

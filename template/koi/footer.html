@@ -1,0 +1,48 @@
+<footer id="footer">
+	<p class="backtotop"><a href="#">Top</a></p>
+	<p class="credits">&copy; <a href="#{{BLOG_HOME_RELATIVE_PATH}}">${{BLOG_TITLE}}</a> <span>&bull;</span> Powered by <a href="https://bitbucket.org/keakon/doodle" rel="nofollow">Doodle</a> <span>&bull;</span>
+	<a href="http://icondock.com" rel="nofollow">Icons</a> &amp; <a href="http://www.ndesign-studio.com/wp-themes" rel="nofollow">Theme</a> by <a href="http://www.ndesign-studio.com" rel="nofollow">N.Design</a> <span>&bull;</span> Ported by <a href="http://www.keakon.net/" rel="nofollow">keakon</a></p>
+<?py
+import hook
+
+response_time = time() - hook.request_arrive_time
+if request.is_admin or DISPLAY_PERFORMANCE_TO_EVERYONE:
+?>
+	<p>响应时间：#{int((response_time) * 1000)}毫秒 <span>&bull;</span> 数据库时间：#{int(hook.db_time * 1000)}毫秒 <span>&bull;</span> 数据库访问次数：#{hook.db_count}次 <span>&bull;</span> 页面生成时间：${formatted_time(get_local_now())}</p>
+<?py else: ?>
+	<p>页面生成时间：${formatted_time(get_local_now(), False)}</p>
+<?py #endif ?>
+</footer>
+</div>
+<!--[if lt IE 9]><div id="noie">妈妈说IE必须死！页面错乱是你活该～</div><![endif]-->
+<script src="/js/jquery.js"></script>
+<?py if page in ('home', 'tag', 'category', 'search'): ?>
+<script src="/theme/koi/js/loadpage.js"></script>
+<?py elif page == 'article': ?>
+<script src="/js/highlight.pack.js"></script>
+<script src="/markitup/jquery.markitup.js"></script>
+<script src="/markitup/sets/bbcode/set.js"></script>
+<script src="/theme/koi/js/msgbox.js"></script>
+<script src="/theme/koi/js/comment.js"></script>
+<script src="#{request.scheme}://www.google.com/buzz/api/button.js"></script>
+<?py elif page == 'profile': ?>
+<script src="/theme/koi/js/msgbox.js"></script>
+<script src="/theme/koi/js/profile.js"></script>
+<?py #endif ?>
+<script src="/js/scroll.js"></script>
+<?PY if ENABLE_TAG_CLOUD: ?>
+<?py if _context.get('_load_tag_js', False): ?>
+<script src="/js/tagcloud.js"></script>
+<?py #endif ?>
+<?PY #endif ?>
+<?PY if GOOGLE_ANALYTICS_ID: ?>
+<script src="#{'http://www' if request.scheme == 'http' else 'https://ssl'}.google-analytics.com/ga.js"></script>
+<script>
+_gaq.push(['_trackEvent', 'LoadTime', '${request.client_ip}', '#{request.path_qs}', new Date() - _gaq_start]);
+<?py if hasattr(request, 'current_user') and request.current_user: ?>
+_gaq.push(['_setCustomVar', 1, 'user', '${request.current_user.name}']);
+<?py #endif ?>
+</script>
+<?PY #endif ?>
+</body>
+</html>

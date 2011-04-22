@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>${title}</title>
+	<link rel="stylesheet" href="/theme/freshpress/css/style.css"/>
+	<script src="/js/jquery.js"></script>
+<?py if page == 'maintain': ?>
+	<script src="/theme/freshpress/js/maintain.js"></script>
+<?py elif page == 'calendar_token': ?>
+	<script src="/theme/freshpress/js/token.js"></script>
+<?py elif page not in ('search_user', 'twitter_oauth', 'twitter_callback'): ?>
+	<script src="/theme/freshpress/js/submit.js"></script>
+<?py 	if page in ('new_article', 'edit_article', 'edit_comment'): ?>
+	<link rel="stylesheet" href="/markitup/skins/simple/style.css"/>
+	<link rel="stylesheet" href="/markitup/sets/html/style.css"/>
+	<link rel="stylesheet" href="/markitup/sets/bbcode/admin_style.css"/>
+	<script src="/markitup/jquery.markitup.js"></script>
+	<script src="/markitup/sets/bbcode/admin_set.js"></script>
+	<script src="/markitup/sets/html/set.js"></script>
+	<script src="/js/markitup.js"></script>
+<?py
+	#endif
+#endif
+?>
+</head>
+<body>
+<header>
+	<hgroup>
+		<h1><a href="#{{BLOG_HOME_RELATIVE_PATH}}">${{BLOG_TITLE}}</a></h1>
+		<h2>${{BLOG_SUB_TITLE}}</h2>
+	</hgroup>
+</header>
+<nav id="nav">
+	<ul>
+		<li class="page_item#{' current' if page in ('new_article', 'del_article', 'unpublished_article') else ''}"><a href="#{{BLOG_ADMIN_RELATIVE_PATH}}article/new/">文章</a></li>
+		<li class="page_item#{' current' if page in ('new_category', 'del_category', 'move_category') else ''}"><a href="#{{BLOG_ADMIN_RELATIVE_PATH}}category/new/">分类</a></li>
+		<li class="page_item#{' current' if page in ('new_tag', 'del_tag', 'move_tag') else ''}"><a href="#{{BLOG_ADMIN_RELATIVE_PATH}}tag/new/">标签</a></li>
+		<li class="page_item#{' current' if page in ('search_user', 'edit_user') else ''}"><a href="#{{BLOG_ADMIN_RELATIVE_PATH}}user/search/">用户</a></li>
+		<li class="page_item#{' current' if page == 'maintain' else ''}"><a href="#{{BLOG_ADMIN_RELATIVE_PATH}}maintain">维护</a></li>
+		<li class="page_item#{' current' if page == 'calendar_token' else ''}"><a href="#{{BLOG_ADMIN_RELATIVE_PATH}}calendar_token">短信提醒</a></li>
+		<li class="page_item#{' current' if page == 'subscribe' else ''}"><a href="#{{BLOG_ADMIN_RELATIVE_PATH}}subscribe">PubSubHubbub</a></li>
+		<li class="page_item#{' current' if page[:7] == 'twitter' else ''}"><a href="#{{BLOG_ADMIN_RELATIVE_PATH}}twitter/status">Twitter</a></li>
+<?PY if CHECK_NEW_VERSION: ?>
+<?py
+latest_version = memcache.get('latest_version')
+if not latest_version:
+	deferred.defer(check_latest_version)
+elif latest_version > DOODLE_VERSION:
+?>
+		<li class="new-version"><a href="https://bitbucket.org/keakon/doodle/downloads" target="_blank">有新版本啦！</a></li>
+<?py #endif ?>
+<?PY #endif ?>
+	</ul>
+</nav>

@@ -1,0 +1,21 @@
+<?py include('admin_header.html') ?>
+	<div class="info"></div>
+	<form method="post" action="">
+		<div><label for="feed">Feed地址</label> <div class="input-field"><input type="text" id="feed" name="feed" value="#{{BLOG_FEED_URL}}"/></div></div>
+		<div><label>请求方式</label>
+			<div class="input-field">
+				<label for="subscribe">订阅</label> <input type="radio" id="subscribe" name="mode" value="subscribe" checked="checked"/>
+				<label for="unsubscribe">退订</label> <input type="radio" id="unsubscribe" name="mode" value="unsubscribe"/>
+				<label for="ping">发布</label> <input type="radio" id="ping" name="mode" value="ping"/>
+			</div>
+		</div>
+		<div><input type="submit" value="提交"/></div>
+	</form>
+	<div class="notice">说明：
+		<ul>
+			<li>该功能可以用PubSubHubbub订阅自己的feed，以让Google Reader立即抓取你的feed。</li>
+			<li>验证成功后你将收到一封提示邮件，之后可以去<a href="https://pubsubhubbub.appspot.com/publish">发布和检测你的feed</a>。</li>
+			<li>发布功能一般无需使用，发表新文章和评论时会自动发布；但如果没有被抓取，可以用这个功能再次发布。</li>
+		</ul>
+	</div>
+<?py include('admin_footer.html') ?>

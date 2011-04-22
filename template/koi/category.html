@@ -1,0 +1,34 @@
+<?py
+not_ajax = not request.is_xhr
+if not_ajax:
+	include('header.html')
+#endif
+?>
+<section id="content">
+<?py
+if articles:
+	include('articles.html')
+	if next_cursor:
+?>
+	<p class="post-nav"><span class="previous"><a href="#{{BLOG_HOME_RELATIVE_PATH}}category/#{quoted_string(category_name)}?cursor=#{quoted_string(next_cursor)}"><em>向前翻页</em> 看看还有什么好玩意</a></span></p>
+<?py
+	#endif
+elif not_ajax:
+	if cursor:
+?>
+	<h2>囧，已经到最后一页了…</h2>
+	<p>去看看其他的页面吧。</p>
+<?py 	else: ?>
+	<h2>囧，这个分类暂时还没有文章…</h2>
+	<p>下次再来看看吧。</p>
+<?py
+	#endif
+#endif
+?>
+</section>
+<?py
+if not_ajax:
+	include('sidebar.html')
+	include('footer.html')
+#endif
+?>

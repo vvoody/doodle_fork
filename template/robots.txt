@@ -1,0 +1,17 @@
+User-agent: *
+Disallow: /_ah/
+Disallow: #{{BLOG_ADMIN_RELATIVE_PATH}}
+Disallow: #{{BLOG_HOME_RELATIVE_PATH}}comment-feed
+Disallow: #{{BLOG_HOME_RELATIVE_PATH}}feed
+Disallow: #{{BLOG_HOME_RELATIVE_PATH}}hub/
+Disallow: #{{BLOG_HOME_RELATIVE_PATH}}search
+Disallow: #{{BLOG_HOME_RELATIVE_PATH}}/point/
+Disallow: #{{BLOG_HOME_RELATIVE_PATH}}wap/
+
+User-agent: Googlebot-Mobile
+Allow: #{{BLOG_HOME_RELATIVE_PATH}}wap/
+
+User-agent: Baiduspider-mobile
+Allow: #{{BLOG_HOME_RELATIVE_PATH}}wap/
+
+Sitemap: #{{MAJOR_HOST_URL}}/sitemap.xml

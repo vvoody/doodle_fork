@@ -1,0 +1,109 @@
+<?py
+_context['_load_tag_js'] = True
+for _ in cache_as('siderbar', SIDEBAR_BAR_CACHE_TIME):
+	from math import log
+	from model import Tag, Category, Comment
+
+	latest_comments = Comment.latest_comments(LATEST_COMMENTS_FOR_SIDEBAR)
+	categories = Category.get_all_categories()
+	tags = Tag.get_all_tags()
+?>
+<section id="sidebar">
+<?PY if ONLINE_VISITORS_EXPIRY_TIME > 0: ?>
+<?py online_visitors = request.online_visitors ?>
+	<section id="online_visitors" class="widget">
+		<h4>在线人数</h4>
+		<p>
+<?py if online_visitors < 10: ?>
+	切，才#{online_visitors}人在线，毫无压力嘛～
+<?py elif online_visitors < 100: ?>
+	囧，#{online_visitors}人在线，有点压力＝。＝
+<?py else: ?>
+	哇，#{online_visitors}人在线，压力好大…
+<?py #endif ?>
+		</p>
+	</section>
+<?PY #endif ?>
+	<section id="latest-comments" class="widget">
+		<h4>最新评论</h4>
+		<ul>
+<?py
+	for (comment, article, user) in izip(*latest_comments):
+		content = strip_html(comment.html_content(), LATEST_COMMENTS_LENGTH)
+?>
+			<li><img src="#{user.get_gravatar()}?s=30&amp;d=monsterid" class="avatar" height="30" width="30" alt="${user.name}"/><strong>${user.name}</strong> <small>(${time_from_now(comment.time)})</small><p class="comment-quote"><a href="#{{BLOG_HOME_RELATIVE_PATH}}#{quoted_string(article.url)}">#{content}</a></p></li>
+<?py 	#endfor ?>
+		</ul>
+	</section>
+<?PY if TWITTER_CONSUMER_KEY and TWITTER_CONSUMER_SECRET: ?>
+<?py
+	tweets = memcache.get('recent_tweets')
+	if tweets:
+		name, tweets = tweets
+?>
+	<section id="recent-tweets" class="widget">
+		<h4>Twitter <a href="https://twitter.com/#{name}">@#{name}</a></h4>
+		<ul>
+<?py 		for tweet in tweets: ?>
+			<li>#{tweet['text']}<small>—${time_from_now(tweet['timestamp'])}</small></li>
+<?py 		#endfor ?>
+		</ul>
+	</section>
+<?py 	#endif ?>
+<?PY #endif ?>
+	<section id="categories" class="widget">
+		<h4>分类</h4>
+		<ul>
+<?py
+	if categories:
+		next_levels = [category.level() for category in categories[1:]] + [1]
+		for category, next_level in izip(categories, next_levels):
+			category_name = escape(category.key().name())
+			link = '<a href="%scategory/%s" title="%s">%s</a>' % tuple([BLOG_HOME_RELATIVE_PATH, quoted_string(category_name)] + [category_name] * 2)
+			current_level = category.level()
+			if current_level == next_level:
+?>
+			<li>#{link}</li>
+<?py 			elif current_level < next_level: ?>
+			<li>#{link}<ul>
+<?py 			else: ?>
+			<li>#{link}</li>#{'</ul></li>' * (current_level - next_level)}
+<?py
+			#endif
+		#endfor
+	#endif
+?>
+		</ul>
+	</section>
+	<section id="tags" class="widget">
+		<h4>标签</h4>
+		<ul>
+<?py
+	for tag in tags:
+		tag_name = escape(tag.key().name())
+?>
+			<li><a href="#{{BLOG_HOME_RELATIVE_PATH}}tag/#{quoted_string(tag_name)}" title="#{tag_name}" style="font-size:#{int(3 * log(max(tag.count + 1, 1))) + 12}px">#{tag_name}</a></li>
+<?py 	#endfor ?>
+		</ul>
+	</section>
+<?PY if	LINKS: ?>
+	<section id="links" class="widget">
+		<h4>友情链接</h4>
+		<ul>
+<?PY
+	for link in LINKS:
+		rel = link.get('rel', '')
+		if rel:
+?>
+			<li><a href="#{{link['url']}}" title="#{{link['text']}}" rel="#{{rel}}">#{{link['text']}}</a></li>
+<?PY 		else: ?>
+			<li><a href="#{{link['url']}}" title="#{{link['text']}}">#{{link['text']}}</a></li>
+<?PY
+		#endif
+	#endfor
+?>
+		</ul>
+	</section>
+<?PY #endif ?>
+</section>
+<?py #endfor ?>

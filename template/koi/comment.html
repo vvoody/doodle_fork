@@ -1,0 +1,57 @@
+<?py include('header.html') ?>
+<section id="content">
+	<h2 class="post-title"><a href="#{{BLOG_HOME_RELATIVE_PATH}}#{article.quoted_url()}" title="${article.title}">${article.title}</a></h2>
+	<section class="post">
+		<section id="commentlist">
+			<ol class="commentlist">
+<?py
+for comment, user in izip(comments, comment_users):
+	comment_id = comment.key().id()
+?>
+				<li><p class="comment-author"><img src="#{user.get_gravatar()}?s=48&amp;d=monsterid" class="avatar" height="48" width="48"/><cite><a id="comment-id-#{comment_id}"
+<?py 	if user.site: ?>
+					href="${user.site}"
+<?py 	#endif ?>
+					>${user.name}</a></cite>
+<?py 	if comment.ua: ?>
+					<span class="ua">
+<?py 		for ua in comment.ua: ?>
+				<img src="/img/ua/#{ua.replace(' ', '-')}.png" alt="#{ua}" title="#{ua}"/>
+<?py 		#endfor ?>
+					</span>
+<?py 	#endif ?>
+					<br><small><strong>${formatted_time(comment.time)}</strong>
+<?py 	if request.is_admin: ?>
+				<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}user/edit/#{id}/#{comment_id}/">[用户设定]</a> <a href="#{{BLOG_ADMIN_RELATIVE_PATH}}comment/edit/#{id}/#{comment_id}/">[编辑]</a> <a href="#{{BLOG_ADMIN_RELATIVE_PATH}}comment/delete/#{id}/#{comment_id}/">[删除]</a>
+<?py 	#endif ?>
+				</small></p><div class="commententry" id="commententry-#{comment_id}"><div>#{comment.html_content()}</div></div><p class="reply"><a class="comment-reply-link" href="#respond">回复</a></p></li>
+<?py #endfor ?>
+			</ol>
+			<div class="comment-nav">
+<?py if next_cursor: ?>
+				<span class="next"><a href="#{{BLOG_HOME_RELATIVE_PATH}}comment/#{id}/#{next_cursor}">下一页</a></span>
+<?py #endif ?>
+			</div>
+		</section>
+		<section id="respond">
+			<h4>想说点什么呢？</h4>
+<?py
+user = request.current_user
+if user:
+?>
+			<form action="#{{BLOG_HOME_RELATIVE_PATH}}comment/#{id}/" method="post" id="commentform">
+				<p>您当前登录的用户为：${user.name}，您可<a href="/logout">登出</a>以更换用户，或<a href="#{{BLOG_HOME_RELATIVE_PATH}}profile/">修改用户资料</a>。</p>
+				<p><textarea name="comment" id="comment" cols="58" rows="10" tabindex="1"></textarea></p>
+				<p><input name="bbcode" type="checkbox" id="bbcode" tabindex="2"/> <label for="bbcode">启用BBCode</label></p>
+				<p><input name="submit" type="submit" id="submit" tabindex="3" value="来一发"/></p>
+			</form>
+<?py else: ?>
+			<p>您需要<a href="/login">登录</a>才能进行评论。</p>
+<?py #endif ?>
+		</section>
+	</section>
+</section>
+<?py
+include('sidebar.html')
+include('footer.html')
+?>

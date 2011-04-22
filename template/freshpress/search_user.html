@@ -1,0 +1,32 @@
+<?py
+from tenjin.html import selected
+include('admin_header.html')
+?>
+	<nav id="nav2">
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}user/search/" class="current">搜索用户</a>
+	</nav>
+<div id="container">
+	<form method="get" action="">
+		<label for="filter">搜索方式</label>
+		<select name="filter">
+			<option value="name">用户名</option>
+			<option value="email"#{selected(filter == 'email')}>Email</option>
+		</select>
+		<input type="text" id="value" name="value" value="${value}"/>
+		<input type="submit" value="搜索"/>
+	</form>
+<?py if users: ?>
+	<table class="search-table">
+	<thead><tr><th>用户名</th><th>邮件</th><th>状态</th></tr></thead>
+	<tbody>
+<?py
+	for user in users:
+		email = user.key().name()
+?>
+	<tr><td><a href="#{{BLOG_ADMIN_RELATIVE_PATH}}user/edit/?email=#{email}" title="编辑用户">${user.name}</a></td><td>#{email}</td><td>${user.status()}</td></tr>
+<?py 	#endfor ?>
+	</tbody>
+	</table>
+<?py #endif ?>
+</div>
+<?py include('admin_footer.html') ?>

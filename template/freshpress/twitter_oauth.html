@@ -1,0 +1,13 @@
+<?py include('admin_header.html') ?>
+	<nav id="nav2">
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}twitter/status">Twitter状态</a>
+		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}twitter/oauth" class="current">关联Twitter</a>
+	</nav>
+	<div class="notice">
+<?PY if TWITTER_CONSUMER_KEY and TWITTER_CONSUMER_SECRET: ?>
+		获取request token失败，可能是Google App Engine或Twitter出现了问题，请刷新本页进行重试。</div>
+<?PY else: ?>
+		您尚未设置Twitter应用的密钥，如需启用该功能，请参考<a href="status">Twitter状态</a>页面进行设置。
+<?PY #endif ?>
+	</div>
+<?py include('admin_footer.html') ?>

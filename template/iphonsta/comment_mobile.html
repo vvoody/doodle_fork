@@ -1,0 +1,44 @@
+<?py include('header_mobile.html') ?>
+<div id="cnt">
+	<ol class="commentlist">
+<?py
+for comment, user in izip(comments, comment_users):
+	comment_id = comment.key().id()
+?>
+		<li class="comment">
+			<div class="comment-author-info"><a id="comment-id-#{comment_id}"
+<?py 	if user.site: ?>
+					href="${user.site}"
+<?py 	#endif ?>
+				>${user.name}</a> @ ${formatted_time(comment.time)}
+<?py 	if request.is_admin: ?>
+		 		<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}comment/delete/#{id}/#{comment_id}/">[删除]</a>
+<?py 	#endif ?>
+		 		<a href="#respond">[回复]</a>
+			</div>
+			<div>#{comment.html_content()}</div>
+		</li>
+<?py #endfor ?>
+	</ol>
+<?py if next_cursor: ?>
+	<div class="comments"><p class="wp-pagenavi"><a href="#{{BLOG_WAP_RELATIVE_PATH}}comment/#{id}/#{quoted_string(next_cursor)}" class="nextpage">翻页</a></p></div>
+<?py #endif ?>
+	<div id="respond">
+		<div id="uit">
+<?py
+user = request.current_user
+if user:
+?>
+			<form action="#{{BLOG_HOME_RELATIVE_PATH}}comment/#{id}/?viewmode=mobile" method="post" id="commentform">
+				<p>您当前登录的用户为：${user.name}，您可<a href="/logout">登出</a>以更换用户，或<a href="#{{BLOG_HOME_RELATIVE_PATH}}profile/">修改用户资料</a>。</p>
+				<p><textarea name="comment" id="comment" cols="100%" rows="10" tabindex="1"></textarea></p>
+				<p><label for="bbcode" onclick="">启用BBCode</label> <input name="bbcode" type="checkbox" id="bbcode" tabindex="2"/></p>
+				<div class="submit"><div class="outbl sbm"><input name="submit" type="submit" id="submit" tabindex="3" value="来一发"/></div></div>
+			</form>
+<?py else: ?>
+			<p>您需要<a href="/login">登录</a>您的Google账号才能进行评论。</p>
+<?py #endif ?>
+		</div>
+	</div>
+</div>
+<?py include('footer_mobile.html') ?>

@@ -1,0 +1,27 @@
+python_preamble:
+- import: my_transform
+
+transformers:
+
+- model: my_transform.Article
+  connector: simplexml
+  connector_options:
+    xpath_to_nodes: /dz/cdb_threads
+    style: element_centric
+  post_import_function: my_transform.generate_article
+
+
+- model: my_transform.Comment
+  connector: simplexml
+  connector_options:
+    xpath_to_nodes: /dz/cdb_posts
+    style: element_centric
+  post_import_function: my_transform.generate_comment
+
+
+- model: my_transform.User
+  connector: simplexml
+  connector_options:
+    xpath_to_nodes: /dz/cdb_members
+    style: element_centric
+  post_import_function: my_transform.generate_user
