@@ -13,7 +13,7 @@ for comment, user in izip(comments, comment_users):
 					href="${user.site}"
 <?py 	#endif ?>
 					>${user.name}</a></cite>
-<?py 	if comment.ua: ?>
+<?py 	if comment.ua and not (user.flag & 8): ?>
 					<span class="ua">
 <?py 		for ua in comment.ua: ?>
 				<img src="/img/ua/#{ua.replace(' ', '-')}.png" alt="#{ua}" title="#{ua}"/>

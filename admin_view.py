@@ -569,6 +569,8 @@ class EditUserPage(BaseHandler):
 					flag |= USER_FLAGS['verified']
 				if POST['banned'] != 'on':
 					flag |= USER_FLAGS['active']
+				if POST['noua'] == 'on':
+					flag |= USER_FLAGS['noua']
 				user.flag = flag
 				try:
 					user.put()

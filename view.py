@@ -272,7 +272,7 @@ class CommentJson(UserHandler):
 				'user_name': user.name,
 				'url': escape(user.site) if user.site else '',
 				'img': user.get_gravatar(),
-				'ua': comment.ua,
+				'ua': comment.ua if not (user.flag & 8) else '',
 				'time': formatted_time(comment.time),
 				'id': comment.key().id(),
 				'content': comment.html_content()
@@ -463,6 +463,11 @@ class ProfilePage(UserHandler):
 					user.flag |= USER_FLAGS['mute']
 			elif user.flag & USER_FLAGS['mute']:
 				user.flag &= ~USER_FLAGS['mute']
+			if POST['noua'] == 'on':
+				if not (user.flag & USER_FLAGS['noua']):
+					user.flag |= USER_FLAGS['noua']
+			elif user.flag & USER_FLAGS['noua']:
+				user.flag &= ~USER_FLAGS['noua']
 			user.put()
 			memcache.set('get_user_by_email:' + user.key().name(), user, USER_CACHE_TIME)
 			if is_ajax:

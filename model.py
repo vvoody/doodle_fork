@@ -22,7 +22,8 @@ QUICK_LIMITED_EVENTUAL_CONSISTENCY_CONFIG = db.create_config(deadline=0.5, read_
 USER_FLAGS = {
 	'active': 1, # 可用，未禁言
 	'verified': 2, # 已验证
-    'mute': 4 # 是否不接收邮件通知
+	'mute': 4, # 是否不接收邮件通知
+	'noua': 8, # 是否不显示UA(默认显示，0)
 }
 
 class User(db.Model):

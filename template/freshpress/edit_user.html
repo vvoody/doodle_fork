@@ -14,7 +14,8 @@ include('admin_header.html')
 		<label for="mute">不接收评论通知</label> <input type="checkbox" id="mute" name="mute"#{checked(user.flag & 4)}/><br/>
 		<label for="verified">已审核</label> <input type="checkbox" id="verified" name="verified"#{checked(user.flag & 2)}/><br/>
 		<label for="banned">禁止发言</label> <input type="checkbox" id="banned" name="banned"#{checked(not(user.flag & 1))}/><br/>
-		<label for="del-comment">删除该用户的所有评论（不可恢复）</label> <input type="checkbox" id="del-comment" name="del-comment"/>
+		<label for="del-comment">删除该用户的所有评论（不可恢复）</label> <input type="checkbox" id="del-comment" name="del-comment"/><br/>
+		<label for="noua">不显示UA</label> <input type="checkbox" id="noua" name="noua"#{checked(user.flag & 8)}/><br/>
 		</div></div>
 		<input type="hidden" id="email" name="email" value="#{user.key().name()}"/>
 		<div><input type="submit" value="保存"/></div>
